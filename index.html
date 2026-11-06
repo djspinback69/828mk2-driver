@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>828mk2 FW Driver · Rewired Software</title>
+<meta name="description" content="Use your MOTU 828mk2 FireWire audio interfaces on a modern Apple silicon Mac.">
+<style>
+  :root {
+    --bg: #0d0f12; --panel: #161a1f; --line: #262c34;
+    --text: #e9edf2; --muted: #9aa4b0; --blue: #35a8dd; --blue-dark: #1f86b8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 28px 0 0; }
+  header img { height: 46px; width: auto; display: block; }
+  .hero { padding: 48px 0 24px; text-align: center; }
+  h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 0 0 14px; letter-spacing: -0.5px; }
+  h1 span { color: var(--blue); }
+  .lede { color: var(--muted); font-size: 19px; max-width: 620px; margin: 0 auto 30px; }
+  .unit { width: 100%; max-width: 760px; height: auto; margin: 10px auto 34px; display: block;
+          filter: drop-shadow(0 24px 40px rgba(0,0,0,.55)); }
+  .download { display: inline-flex; align-items: center; gap: 12px; background: var(--blue); color: #04121b;
+              font-weight: 700; font-size: 19px; padding: 16px 30px; border-radius: 12px; text-decoration: none;
+              box-shadow: 0 8px 24px rgba(53,168,221,.35); transition: transform .15s, background .15s; }
+  .download:hover { background: #4bb6e6; transform: translateY(-1px); }
+  .download svg { width: 22px; height: 22px; }
+  .meta { color: var(--muted); font-size: 14px; margin-top: 12px; }
+  .count { color: var(--blue); }
+  section { padding: 40px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 24px; margin: 0 0 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  ol.steps li { counter-increment: s; background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+                padding: 18px 22px 18px 70px; position: relative; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 20px; top: 16px; width: 34px; height: 34px;
+                        border-radius: 50%; background: var(--blue); color: #04121b; font-weight: 800;
+                        display: grid; place-items: center; }
+  ol.steps strong { display: block; margin-bottom: 2px; }
+  ol.steps span { color: var(--muted); font-size: 15px; }
+  .key { color: var(--text); background: #222932; border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px;
+         font-size: 14px; white-space: nowrap; }
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 20px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p, details li { color: var(--muted); font-size: 15px; }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 46px; color: var(--muted); font-size: 13px; }
+  footer img { height: 26px; opacity: .8; margin-bottom: 10px; display: block; }
+  a { color: var(--blue); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="img/rewired-software.png" alt="Rewired Software"></header>
+
+  <div class="hero">
+    <h1>Bring your <span>828mk2</span> back to life</h1>
+    <p class="lede">A new driver that lets one or two MOTU 828mk2 FireWire interfaces work on a modern Apple silicon Mac: up to 44 channels in and out, MIDI, and sample rates up to 96&nbsp;kHz.</p>
+
+    <!-- Stylised 828mk2 front panel (drawn, not a photo) -->
+    <svg class="unit" viewBox="0 0 760 120" role="img" aria-label="Drawing of an 828mk2 rack unit">
+      <defs>
+        <linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3038"/><stop offset="1" stop-color="#15191e"/></linearGradient>
+        <linearGradient id="lcd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e2a3a"/><stop offset="1" stop-color="#081822"/></linearGradient>
+      </defs>
+      <rect x="2" y="8" width="756" height="104" rx="6" fill="url(#body)" stroke="#39414b"/>
+      <rect x="10" y="20" width="12" height="80" rx="3" fill="#0f1215"/><rect x="738" y="20" width="12" height="80" rx="3" fill="#0f1215"/>
+      <circle cx="16" cy="32" r="3.5" fill="#4a535e"/><circle cx="16" cy="88" r="3.5" fill="#4a535e"/>
+      <circle cx="744" cy="32" r="3.5" fill="#4a535e"/><circle cx="744" cy="88" r="3.5" fill="#4a535e"/>
+      <!-- mic inputs -->
+      <circle cx="62" cy="60" r="19" fill="#0c0e11" stroke="#4a535e" stroke-width="2"/><circle cx="62" cy="60" r="8" fill="#20262d"/>
+      <circle cx="116" cy="60" r="19" fill="#0c0e11" stroke="#4a535e" stroke-width="2"/><circle cx="116" cy="60" r="8" fill="#20262d"/>
+      <!-- knobs -->
+      <circle cx="170" cy="48" r="9" fill="#0e1114" stroke="#5a646f"/><circle cx="170" cy="78" r="9" fill="#0e1114" stroke="#5a646f"/>
+      <circle cx="205" cy="48" r="9" fill="#0e1114" stroke="#5a646f"/><circle cx="205" cy="78" r="9" fill="#0e1114" stroke="#5a646f"/>
+      <!-- display -->
+      <rect x="240" y="34" width="132" height="52" rx="4" fill="url(#lcd)" stroke="#35a8dd" stroke-opacity=".5"/>
+      <text x="252" y="56" fill="#35a8dd" font-family="Menlo, monospace" font-size="13">44.1kHz  44ch</text>
+      <text x="252" y="75" fill="#35a8dd" font-family="Menlo, monospace" font-size="13" opacity=".7">CLOCK  LOCKED</text>
+      <!-- meters -->
+      <g id="meters"></g>
+      <!-- brand area -->
+      <text x="640" y="56" fill="#e9edf2" font-family="-apple-system, Helvetica, Arial" font-weight="800" font-size="26">828</text>
+      <text x="688" y="48" fill="#e9edf2" font-family="-apple-system, Helvetica, Arial" font-weight="700" font-size="11">mk2</text>
+      <circle cx="704" cy="84" r="14" fill="#0e1114" stroke="#5a646f" stroke-width="2"/>
+    </svg>
+
+    <a class="download" id="download" href="https://github.com/djspinback69/828mk2-driver/releases/latest/download/Rewired-Software-828Mk2-FW-Driver.pkg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+      Download version 0.6
+    </a>
+    <div class="meta">macOS 15 or later · Apple silicon · 220 KB · signed and notarised by Apple<span id="count"></span></div>
+  </div>
+
+  <section>
+    <h2>What you need</h2>
+    <div class="grid">
+      <div class="card"><h3>An Apple silicon Mac</h3><p>Mac mini, MacBook, iMac or Studio with M1 or later, running macOS 15 or newer.</p></div>
+      <div class="card"><h3>FireWire adapters</h3><p>Apple's Thunderbolt to FireWire Adapter, plus Apple's Thunderbolt 3 (USB-C) to Thunderbolt 2 Adapter.</p></div>
+      <div class="card"><h3>One or two 828mk2s</h3><p>One gives 22 channels in and out. Two give 44: chain them with FireWire and run a word clock BNC cable from the first box's OUT to the second box's IN.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Installing takes about two minutes</h2>
+    <ol class="steps">
+      <li><strong>Open the downloaded installer</strong><span>Double-click it, click through, and enter your Mac password when asked.</span></li>
+      <li><strong>Switch on the driver</strong><span>A window guides you and opens System Settings. Under <span class="key">Extensions</span>, click the <span class="key">ⓘ</span> next to <span class="key">Driver Extensions</span> and switch on <span class="key">Driver Extension</span>. macOS asks this once, for your security.</span></li>
+      <li><strong>Plug in and play</strong><span>Connect the FireWire adapter and switch on your 828mk2. Choose <span class="key">828mk2</span> as the audio device in your music software. The <span class="key">828</span> menu at the top of the screen shows that everything is running.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Help</h2>
+    <details><summary>The 828 menu says "not found"</summary>
+      <p>Check the adapter is pushed fully into the Mac and the 828mk2 is switched on. If the Mac doesn't see the adapter, unplug it for a few seconds and try another Thunderbolt port. With two 828s, check the FireWire cable between them is pushed fully in.</p></details>
+    <details><summary>Only 22 channels with two 828s</summary>
+      <p>The driver counts the boxes when it starts. Switch both on, then unplug the adapter for 10 seconds and plug it back in.</p></details>
+    <details><summary>Naming channels and MIDI ports</summary>
+      <p>Use <span class="key">828 → Channel names…</span>. In Ableton Live, name inputs and outputs in Live's own Input and Output Config instead: Live doesn't read names from audio drivers.</p></details>
+    <details><summary>Uninstalling</summary>
+      <p>Open <span class="key">Rewired Software 828Mk2 FW Driver</span> from your Applications folder and click <span class="key">Uninstall the driver…</span>. Then drag it and the <span class="key">828mk2</span> app to the Bin.</p></details>
+  </section>
+
+  <footer>
+    <img src="img/rewired-software.png" alt="Rewired Software">
+    © 2026 Rewired Software. Free to use. Not affiliated with or endorsed by MOTU. MOTU and 828mk2 are trademarks of Mark of the Unicorn, Inc.
+  </footer>
+</div>
+
+<script>
+  // Front-panel meters on the drawing.
+  (function () {
+    var g = document.getElementById('meters'), ns = 'http://www.w3.org/2000/svg', bars = [];
+    for (var i = 0; i < 22; i++) {
+      var r = document.createElementNS(ns, 'rect');
+      r.setAttribute('x', 395 + i * 10); r.setAttribute('width', 6); r.setAttribute('rx', 1);
+      g.appendChild(r); bars.push(r);
+    }
+    var lv = bars.map(function () { return Math.random(); });
+    function draw() {
+      bars.forEach(function (r, i) {
+        lv[i] = Math.max(0.08, Math.min(1, lv[i] + (Math.random() - 0.5) * 0.35));
+        var h = 8 + lv[i] * 52;
+        r.setAttribute('y', 88 - h); r.setAttribute('height', h);
+        r.setAttribute('fill', lv[i] > 0.88 ? '#f2b84b' : '#35a8dd');
+      });
+    }
+    draw();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(draw, 120);
+  })();
+
+  // Download count from GitHub (every download of the installer is counted there).
+  fetch('https://api.github.com/repos/djspinback69/828mk2-driver/releases')
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (releases) {
+      var n = 0;
+      releases.forEach(function (rel) { (rel.assets || []).forEach(function (a) { n += a.download_count; }); });
+      if (n > 0) document.getElementById('count').textContent = ' · downloaded ' + n.toLocaleString() + ' times';
+    })
+    .catch(function () {});
+</script>
+</body>
+</html>
